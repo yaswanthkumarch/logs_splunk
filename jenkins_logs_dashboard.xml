@@ -1,0 +1,48 @@
+<dashboard>
+    <label>Jenkins Logs Dashboard</label>
+    <description>Dashboard for monitoring Jenkins log events</description>
+    <row>
+        <panel>
+            <title>Log Type Distribution (Last 60 Minutes)</title>
+            <chart>
+                <search>
+                    <query>index=log_splunk sourcetype="jenkins_logs" | stats count by logType</query>
+                    <earliest>-60m</earliest>
+                    <latest>now</latest>
+                </search>
+                <option name="charting.chart">pie</option>
+                <option name="refresh.auto.interval">60</option>
+            </chart>
+        </panel>
+    </row>
+
+    <row>
+        <panel>
+            <title>Recent Jenkins Log Events</title>
+            <table>
+                <search>
+                    <query>index=log_splunk sourcetype="jenkins_logs" | table _time, logType, userId, message</query>
+                    <earliest>-1h</earliest>
+                    <latest>now</latest>
+                </search>
+                <option name="count">10</option>
+                <option name="refresh.auto.interval">30</option>
+            </table>
+        </panel>
+    </row>
+
+    <row>
+        <panel>
+            <title>Logs Over Time</title>
+            <chart>
+                <search>
+                    <query>index=log_splunk sourcetype="jenkins_logs" | timechart count by logType</query>
+                    <earliest>-24h</earliest>
+                    <latest>now</latest>
+                </search>
+                <option name="charting.chart">line</option>
+                <option name="refresh.auto.interval">300</option>
+            </chart>
+        </panel>
+    </row>
+</dashboard>
