@@ -1,3 +1,4 @@
+import os
 import configparser
 import smtplib
 from email.mime.text import MIMEText
@@ -53,8 +54,11 @@ class ConfigValidatorBot:
 
             try:
                 server = smtplib.SMTP('smtp.gmail.com', 587)
+                print("Connecting to SMTP server...")
                 server.starttls()
+                print("Starting TLS...")
                 server.login(sender_email, sender_password)
+                print("Logged in to SMTP server.")
                 server.sendmail(sender_email, recipients, msg.as_string())
                 server.quit()
                 print("Email sent successfully.")
@@ -72,16 +76,20 @@ class ConfigValidatorBot:
 
 
 # Usage
-# Usage
 if __name__ == "__main__":
     # File path to validate
     file_path = r"C:\Program Files\Splunk\etc\apps\logs_splunk\local\inputs.conf"  # Use raw string (r"") for Windows paths
 
-    # Email credentials
-    sender_email = "Yaswanthkumarch2001@gmail.com"  # Your email ID
-    sender_password = "uqjc bszf djfw bsor"  # Your email password (ensure this is secure; do not hardcode in production)
+    # Email credentials (fetched from environment variables)
+    sender_email = os.getenv("SENDER_EMAIL")  # Your email ID
+    sender_password = os.getenv("EMAIL_PASSWORD")  # Your email password (from environment variable)
     recipients = ["yaswanth@middlewaretalents.com"]  # Recipient email ID
 
-    # Initialize and run the bot
-    bot = ConfigValidatorBot(file_path)
-    bot.run(recipients, sender_email, sender_password)
+    # Check if required environment variables are set
+    if not sender_email or not sender_password:
+        print("Error: Missing environment variables for email credentials.")
+        print("Please set SENDER_EMAIL and EMAIL_PASSWORD environment variables.")
+    else:
+        # Initialize and run the bot
+        bot = ConfigValidatorBot(file_path)
+        bot.run(recipients, sender_email, sender_password)
