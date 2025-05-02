@@ -2,6 +2,7 @@
     <label>Jenkins Logs Dashboard</label>
     <description>Dashboard for monitoring Jenkins log events</description>
     <row>
+
         <panel>
             <title>Log Type Distribution (Last 60 Minutes)</title>
             <chart>
